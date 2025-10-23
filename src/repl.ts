@@ -1,5 +1,6 @@
 import { createInterface } from "node:readline";
 import { stdin, stdout } from "node:process";
+import { getCommands } from "./commands.js";
 
 export function cleanInput(inputString: string): string[] {
     const newArray = inputString.trim().toLowerCase().split(" ");
@@ -9,23 +10,39 @@ export function cleanInput(inputString: string): string[] {
     return newArray;
 }
 
-const r1 = createInterface({
-    input: stdin,
-    output: stdout,
-    prompt: `Pokedex > `,
-});
 
 export function startREPL() {
+    const r1 = createInterface({
+        input: stdin,
+        output: stdout,
+        prompt: `Pokedex > `,
+    });
+
     r1.prompt();
+
     r1.on("line", (input) => {
-        let words = cleanInput(input);
+        const words = cleanInput(input);
 
         if (words.length === 0){
             r1.prompt();
             return;
-        } else {
-            console.log(`Your command was: ${words[0]}`);
-            r1.prompt();
         }
+
+        const command = words[0];
+
+        const commands = getCommands();
+            
+        if (command in commands) {
+                try {
+                    const commandObject = commands[command];
+                    commandObject.callback(commands);
+                } catch (e) {
+                    console.log(e);
+                }
+        } else {
+                console.log("Unknown command");
+        }
+
+        r1.prompt();    
     })
 }
