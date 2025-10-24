@@ -1,7 +1,9 @@
-import { startREPL } from "./repl.js"
+import { startREPL } from "./repl.js";
+import { initState } from "./state.js";
 
 function main() {
-    startREPL();
+  const programState = initState();
+  startREPL(programState);
 }
 
 main();
