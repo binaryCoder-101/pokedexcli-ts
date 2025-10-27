@@ -5,38 +5,10 @@ export function cleanInput(inputString) {
     }
     return newArray;
 }
-// export function startREPL(state: State) {
-//     const r1 = createInterface({
-//         input: stdin,
-//         output: stdout,
-//         prompt: `Pokedex > `,
-//     });
-//     r1.prompt();
-//     r1.on("line", (input) => {
-//         const words = cleanInput(input);
-//         if (words.length === 0){
-//             r1.prompt();
-//             return;
-//         }
-//         const command = words[0];
-//         const commands = getCommands();
-//         if (command in commands) {
-//                 try {
-//                     const commandObject = commands[command];
-//                     commandObject.callback(commands);
-//                 } catch (e) {
-//                     console.log(e);
-//                 }
-//         } else {
-//                 console.log("Unknown command");
-//         }
-//         r1.prompt();    
-//     })
-// }
 export function startREPL(state) {
-    const r1 = state.readWrite;
+    const r1 = state.readline;
     r1.prompt();
-    r1.on("line", (input) => {
+    r1.on("line", async (input) => {
         const words = cleanInput(input);
         if (words.length === 0) {
             r1.prompt();
@@ -47,7 +19,7 @@ export function startREPL(state) {
         if (command in commands) {
             try {
                 const commandObject = commands[command];
-                commandObject.callback(state);
+                await commandObject.callback(state);
             }
             catch (e) {
                 console.log(e);
@@ -59,4 +31,3 @@ export function startREPL(state) {
         r1.prompt();
     });
 }
-;
