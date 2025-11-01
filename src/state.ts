@@ -30,6 +30,6 @@ export function initState(): State {
     commandsRegistry: commandsRegistry,
     prevLocationsURL: "",
     nextLocationsURL: "",
-    pokeapi: new PokeAPI(),
+    pokeapi: new PokeAPI(3 * 60 * 1000),
   };
 }

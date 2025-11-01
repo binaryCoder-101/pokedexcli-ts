@@ -13,6 +13,6 @@ export function initState() {
         commandsRegistry: commandsRegistry,
         prevLocationsURL: "",
         nextLocationsURL: "",
-        pokeapi: new PokeAPI(),
+        pokeapi: new PokeAPI(5),
     };
 }

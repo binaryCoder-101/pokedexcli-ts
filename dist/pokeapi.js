@@ -1,22 +1,33 @@
+import { Cache } from "./pokecache.js";
 export class PokeAPI {
     static baseURL = "https://pokeapi.co/api/v2";
-    constructor() { }
+    cache;
+    constructor(intervalMinutes) {
+        this.cache = new Cache(intervalMinutes);
+    }
     async fetchLocations(pageURL) {
         let url = pageURL || `${PokeAPI.baseURL}/location-area/`;
-        try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`Response status: ${response.status}`);
-            }
-            const result = await response.json();
-            return result;
+        const cacheEntry = this.cache.get(url);
+        if (cacheEntry) {
+            return cacheEntry.val;
         }
-        catch (error) {
-            if (error instanceof Error) {
-                throw new Error(`Invalid JSON String!: ${error.message}`);
+        else {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Response status: ${response.status}`);
+                }
+                const result = await response.json();
+                this.cache.add(url, result);
+                return result;
             }
-            else {
-                throw new Error(`Unknown error occurred: ${error}`);
+            catch (error) {
+                if (error instanceof Error) {
+                    throw new Error(`Invalid JSON String!: ${error.message}`);
+                }
+                else {
+                    throw new Error(`Unknown error occurred: ${error}`);
+                }
             }
         }
     }
