@@ -1,7 +1,7 @@
 export class Cache {
     #cache = new Map();
     #reapIntervalId = undefined;
-    #interval = 0;
+    #interval;
     #reap() {
         const cutoff = Date.now() - this.#interval;
         for (let [key, entry] of this.#cache) {
@@ -11,11 +11,11 @@ export class Cache {
         }
     }
     #startReapLoop() {
-        this.#reapIntervalId = setInterval(this.#reap, this.#interval);
+        this.#reapIntervalId = setInterval(() => this.#reap(), this.#interval);
     }
     constructor(interval) {
-        this.#interval = interval * 60 * 1000;
-        this.#startReapLoop;
+        this.#interval = interval;
+        this.#startReapLoop();
     }
     stopReapLoop() {
         clearInterval(this.#reapIntervalId);

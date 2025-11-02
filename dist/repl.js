@@ -10,16 +10,18 @@ export function startREPL(state) {
     r1.prompt();
     r1.on("line", async (input) => {
         const words = cleanInput(input);
-        if (words.length === 0) {
-            r1.prompt();
-            return;
-        }
         const command = words[0];
+        const parameter = words.slice(1);
         const commands = state.commandsRegistry;
         if (command in commands) {
             try {
                 const commandObject = commands[command];
-                await commandObject.callback(state);
+                if (!parameter) {
+                    await commandObject.callback(state);
+                }
+                else {
+                    await commandObject.callback(state, ...parameter);
+                }
             }
             catch (e) {
                 console.log(e);
