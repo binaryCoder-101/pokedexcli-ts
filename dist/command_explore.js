@@ -1,4 +1,5 @@
-export async function commandExplore(state, location) {
+export async function commandExplore(state, ...args) {
+    const location = args[0];
     const result = await state.pokeapi.fetchLocation(location);
     for (let pokemonDetails of result.pokemon_encounters) {
         console.log(pokemonDetails.pokemon.name);

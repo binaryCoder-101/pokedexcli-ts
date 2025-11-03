@@ -14,5 +14,6 @@ export function initState() {
         prevLocationsURL: "",
         nextLocationsURL: "",
         pokeapi: new PokeAPI(3 * 60 * 1000),
+        pokedex: {},
     };
 }
